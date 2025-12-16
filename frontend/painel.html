@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel - O Estrangeiro Delivery</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 20px;
+    }
+    h1 {
+      color: #ffcc00;
+    }
+    .pedido {
+      background: #222;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 8px;
+    }
+    .pedido b {
+      color: #ffcc00;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px;
+      border: none;
+      background: #ffcc00;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📋 Painel de Pedidos</h1>
+
+<div id="lista"></div>
+
+<script>
+function carregarPedidos() {
+  fetch("/api/pedidos")
+    .then(res => res.json())
+    .then(pedidos => {
+      const lista = document.getElementById("lista");
+      lista.innerHTML = "";
+
+      pedidos.reverse().forEach(p => {
+        const div = document.createElement("div");
+        div.className = "pedido";
+        div.innerHTML = `
+          <p><b>Nome:</b> ${p.nome || "-"}</p>
+          <p><b>WhatsApp:</b> ${p.telefone || "-"}</p>
+          <p><b>Pedido:</b> ${p.pedido}</p>
+          <p><b>Data:</b> ${p.data || "-"}</p>
+        `;
+        lista.appendChild(div);
+      });
+    });
+}
+
+carregarPedidos();
+setInterval(carregarPedidos, 5000);
+</script>
+
+</body>
+</html>
