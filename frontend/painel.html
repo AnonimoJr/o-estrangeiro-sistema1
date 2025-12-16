@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Painel</title>
+</head>
+<body>
+  <h1>📋 Painel de Pedidos</h1>
+  <div id="lista"></div>
+
+  <script>
+    function carregar() {
+      fetch("/api/pedidos")
+        .then(r => r.json())
+        .then(pedidos => {
+          const lista = document.getElementById("lista");
+          lista.innerHTML = "";
+          pedidos.forEach((p, i) => {
+            lista.innerHTML += `
+              <hr>
+              <b>Nome:</b> ${p.nome}<br>
+              <b>Pedido:</b> ${p.pedido}<br>
+              <b>Status:</b> ${p.status}<br>
+              <b>Pix:</b><br>
+              <textarea rows="3" cols="40">${p.pix}</textarea><br>
+              <button onclick="pagar(${i})">Marcar como pago</button>
+            `;
+          });
+        });
+    }
+
+    function pagar(i) {
+      fetch("/api/pagar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ index: i })
+      }).then(carregar);
+    }
+
+    carregar();
+    setInterval(carregar, 5000);
+  </script>
+</body>
+</html>
