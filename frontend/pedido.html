@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Pedido</title>
+</head>
+<body>
+  <h1>🍔 Fazer Pedido</h1>
+
+  <input id="nome" placeholder="Nome"><br><br>
+  <input id="telefone" placeholder="WhatsApp"><br><br>
+  <textarea id="pedido" placeholder="Pedido"></textarea><br><br>
+
+  <button onclick="enviar()">Enviar Pedido</button>
+
+  <pre id="pix"></pre>
+
+  <script>
+    function enviar() {
+      fetch("/api/pedidos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome: nome.value,
+          telefone: telefone.value,
+          pedido: pedido.value,
+          data: new Date().toLocaleString()
+        })
+      })
+      .then(r => r.json())
+      .then(p => {
+        pix.innerText =
+`💸 PAGUE COM PIX
+
+Chave (CPF):
+${p.pix.chave}
+
+Nome:
+${p.pix.nome}
+
+Cidade:
+${p.pix.cidade}
+
+⚠️ Após pagar, aguarde a confirmação.`;
+      });
+    }
+  </script>
+</body>
+</html>
