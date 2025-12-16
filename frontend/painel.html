@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel</title>
+</head>
+<body>
+  <h1>Painel de Pedidos</h1>
+  <div id="lista"></div>
+
+  <script>
+    function carregar() {
+      fetch("/api/pedidos")
+        .then(res => res.json())
+        .then(pedidos => {
+          const lista = document.getElementById("lista");
+          lista.innerHTML = "";
+          pedidos.forEach(p => {
+            const div = document.createElement("div");
+            div.innerHTML = `
+              <hr>
+              <b>Nome:</b> ${p.nome}<br>
+              <b>WhatsApp:</b> ${p.telefone}<br>
+              <b>Pedido:</b> ${p.pedido}<br>
+              <b>Data:</b> ${p.data}
+            `;
+            lista.appendChild(div);
+          });
+        });
+    }
+    carregar();
+    setInterval(carregar, 5000);
+  </script>
+</body>
+</html>
